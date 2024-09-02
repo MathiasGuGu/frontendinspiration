@@ -34,12 +34,14 @@ const PostsList = () => {
                 .fill(0)
                 .map((_, index) => (
                   <Button
+                    key={index}
                     variant={"outline"}
                     className="animate-pulse gap-2 px-12"
                   ></Button>
                 ))}
-            {getAllCategories?.map((category) => (
+            {getAllCategories?.map((category, index) => (
               <Button
+                key={index}
                 variant={filter === category.id ? "default" : "outline"}
                 className="gap-2"
                 onClick={() => setFilter(category.id)}
