@@ -4,7 +4,7 @@ import { Globe2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect } from "react";
 
-const page = ({ params }: { params: { postId: string } }) => {
+const Page = ({ params }: { params: { postId: string } }) => {
   const { postId } = params;
   const { getPostById, postByIdData: post } = PostsService();
 
@@ -42,4 +42,4 @@ const page = ({ params }: { params: { postId: string } }) => {
   );
 };
 
-export default page;
+export default Page;

@@ -14,8 +14,6 @@ import { useFilterStore } from "../../stores/filterStore";
 export const PostsService = () => {
   const filter = useFilterStore((state) => state.filter);
 
-  console.log(filter);
-
   const {
     data: allPosts,
     isLoading: isAllPostsLoading,
