@@ -2,13 +2,24 @@ import React from "react";
 import NavbarLogo from "./NavbarLogo";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 
 const NavbarDesktop = () => {
   return (
     <>
       <NavbarLogo />
       <ul className="flex items-center justify-start">
+        <Link href="/">
+          <Button variant={"link"} size={"sm"}>
+            Discover
+          </Button>
+        </Link>
         <Link href="">
           <Button variant={"link"} size={"sm"}>
             Tech stacks
@@ -25,7 +36,9 @@ const NavbarDesktop = () => {
           </Button>
         </Link>
         <div className="flex items-center gap-2">
-          <SignedIn></SignedIn>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
           <SignedOut>
             <SignInButton>
               <Button variant={"outline"} size={"sm"}>
