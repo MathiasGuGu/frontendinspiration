@@ -52,14 +52,16 @@ export const PostsService = () => {
     onSuccess: () => refetchAllPosts(),
   });
 
-  const { data } = useMutation({
+  const { mutate: getPostById, data: postByIdData } = useMutation({
     mutationKey: ["posts_getPostById"],
-    mutationFn: (id: string) => posts_getPostById(id),
+    mutationFn: (id: number) => posts_getPostById(id),
   });
 
   return {
     createNewPost,
     likePost,
+    getPostById,
+    postByIdData,
     isCreateNewPostPending,
     isCreateNewPostError,
     allPosts,

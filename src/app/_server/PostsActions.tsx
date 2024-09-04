@@ -26,8 +26,8 @@ export const posts_likePost = async ({
   return await api.post.likePost({ postId: id, clerkId });
 };
 
-export const posts_getPostById = async (id: string) => {
-  return id;
+export const posts_getPostById = async (id: number) => {
+  return await api.post.getById({ postId: id });
 };
 
 export const posts_updatePost = async (id: string, post: Post) => {

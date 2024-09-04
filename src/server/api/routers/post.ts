@@ -41,7 +41,6 @@ export const postRouter = createTRPCRouter({
         return post ?? null;
       }
 
-      console.log(input.categoryId);
       const post = await ctx.db.query.posts.findMany({
         where: (post, { eq }) => eq(post.categoryId, input.categoryId!),
         limit: 25,
@@ -62,5 +61,19 @@ export const postRouter = createTRPCRouter({
         post: input.postId,
         user: input.clerkId,
       });
+    }),
+  getById: publicProcedure
+    .input(
+      z.object({
+        postId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      console.log(input.postId);
+      const post = await ctx.db.query.posts.findFirst({
+        where: (post, { eq }) => eq(post.id, input.postId),
+      });
+
+      return post ?? null;
     }),
 });
