@@ -19,6 +19,7 @@ const config = {
     "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/only-throw-error": "off",
+    "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
