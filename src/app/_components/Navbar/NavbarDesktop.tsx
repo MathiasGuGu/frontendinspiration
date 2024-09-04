@@ -15,12 +15,12 @@ const NavbarDesktop = () => {
     <>
       <NavbarLogo />
       <ul className="flex items-center justify-start">
-        <Link href="/">
+        <Link href="/" className="">
           <Button variant={"link"} size={"sm"}>
             Discover
           </Button>
         </Link>
-        <Link href="">
+        {/* <Link href="">
           <Button variant={"link"} size={"sm"}>
             Tech stacks
           </Button>
@@ -34,8 +34,8 @@ const NavbarDesktop = () => {
           <Button variant={"link"} size={"sm"}>
             Collections
           </Button>
-        </Link>
-        <div className="flex items-center gap-2">
+        </Link> */}
+        <div className="flex items-center gap-2 pl-4">
           <SignedIn>
             <UserButton />
           </SignedIn>
