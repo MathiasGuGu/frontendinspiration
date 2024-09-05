@@ -20,6 +20,14 @@ const NavbarDesktop = () => {
             Discover
           </Button>
         </Link>
+        {/* <SignedIn>
+          <Link href="/" className="">
+            <Button variant={"link"} size={"sm"}>
+              Saved
+            </Button>
+          </Link>
+        </SignedIn> */}
+
         {/* <Link href="">
           <Button variant={"link"} size={"sm"}>
             Tech stacks

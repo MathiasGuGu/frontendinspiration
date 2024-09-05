@@ -34,7 +34,7 @@ const Post = ({ post }: { post: any }) => {
           <p className="text-sm text-purple-600">{post.description}</p>
         </div>
         <div className="flex items-center justify-start gap-2">
-          <Button
+          {/* <Button
             onClick={() => {
               likePost({ id: post.id, clerkId: userId! });
             }}
@@ -42,7 +42,7 @@ const Post = ({ post }: { post: any }) => {
             className="m-0 size-10 p-0"
           >
             <Heart size={20} strokeWidth={1.5} />
-          </Button>
+          </Button> */}
 
           <Link href={post.link ?? ""}>
             <Button variant={"ghost"} className="m-0 size-10 px-0">
@@ -50,9 +50,9 @@ const Post = ({ post }: { post: any }) => {
             </Button>
           </Link>
 
-          <Button variant={"ghost"} className="m-0 size-10 px-0">
+          {/* <Button variant={"ghost"} className="m-0 size-10 px-0">
             <Share2 size={20} strokeWidth={1.5} />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
