@@ -1,7 +1,7 @@
 import React from "react";
 
 const FooterMobile = () => {
-  return <>FooterMobile</>;
+  return <></>;
 };
 
 export default FooterMobile;
