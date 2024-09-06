@@ -2,17 +2,11 @@
 import { PostsService } from "@/app/_services/PostsService";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import {
-  Boxes,
-  FilterX,
-  Loader,
-  Loader2,
-  LoaderCircle,
-  Star,
-} from "lucide-react";
+import { FilterX, Loader2 } from "lucide-react";
 import Post from "./Post";
 import { CategoryService } from "@/app/_services/CategoryService";
 import { useFilterStore } from "@/stores/filterStore";
+import PostPagination from "../Pagination/PostPagination";
 const PostsList = () => {
   const { allPosts, isAllPostsLoading } = PostsService();
   const { getAllCategories } = CategoryService();
@@ -61,13 +55,16 @@ const PostsList = () => {
               <Loader2 className="animate-spin" />
             </div>
           )}
-          {!isAllPostsLoading && allPosts && allPosts.length === 0 && (
+          {!isAllPostsLoading && allPosts && allPosts.data.length === 0 && (
             <div className="flex h-64 w-[90vw] items-center justify-center">
               Something went wrong, tying again...
             </div>
           )}
-          {allPosts?.map((post) => <Post key={post.id} post={post} />)}
+          {allPosts?.data?.map((post) => <Post key={post.id} post={post} />)}
         </section>
+        <PostPagination
+          totalPages={allPosts?.totalPages ? allPosts.totalPages : 0}
+        />
       </div>
     </div>
   );

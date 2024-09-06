@@ -30,23 +30,29 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         categoryId: z.number().optional(),
+        page: z.number().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (!input.categoryId) {
-        const post = await ctx.db.query.posts.findMany({
-          limit: 25,
-          offset: 0,
-        });
-        return post ?? null;
-      }
+      const LIMIT = 6;
+
+      const totalPosts = await ctx.db.query.posts.findMany({});
+      const totalPages = Math.ceil(totalPosts.length / LIMIT);
 
       const post = await ctx.db.query.posts.findMany({
-        where: (post, { eq }) => eq(post.categoryId, input.categoryId!),
-        limit: 25,
-        offset: 0,
+        where: (post, { eq, isNotNull }) => {
+          return input.categoryId
+            ? eq(post.categoryId, input.categoryId!)
+            : isNotNull(post.id);
+        },
+
+        limit: LIMIT,
+        offset: input.page ? (input.page - 1) * LIMIT : 0,
       });
-      return post ?? null;
+      return {
+        data: post ?? null,
+        totalPages,
+      };
     }),
 
   likePost: publicProcedure

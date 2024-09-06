@@ -12,8 +12,11 @@ export const posts_createNewPost = async (post: Post) => {
   return await api.post.create(post);
 };
 
-export const posts_getAllPosts = async (categoryId: number | undefined) => {
-  return await api.post.getAll({ categoryId });
+export const posts_getAllPosts = async (
+  categoryId: number | undefined,
+  page: number | undefined,
+) => {
+  return await api.post.getAll({ categoryId, page });
 };
 
 export const posts_likePost = async ({

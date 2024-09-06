@@ -1,18 +1,18 @@
 "use client";
 import {
   posts_createNewPost,
-  posts_deletePost,
   posts_getAllPosts,
   posts_getPostById,
   posts_likePost,
-  posts_updatePost,
 } from "@/app/_server/PostsActions";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React from "react";
 import { useFilterStore } from "../../stores/filterStore";
+import { useSearchParams } from "next/navigation";
 
 export const PostsService = () => {
   const filter = useFilterStore((state) => state.filter);
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
 
   const {
     data: allPosts,
@@ -20,8 +20,8 @@ export const PostsService = () => {
     isError: isAllPostsError,
     refetch: refetchAllPosts,
   } = useQuery({
-    queryKey: ["posts_getAllPosts", filter],
-    queryFn: () => posts_getAllPosts(filter),
+    queryKey: ["posts_getAllPosts", filter, page],
+    queryFn: () => posts_getAllPosts(filter, page ? parseInt(page) : 1),
   });
 
   const { mutate: likePost } = useMutation({
