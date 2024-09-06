@@ -20,22 +20,38 @@ const PostPagination = ({ totalPages }: { totalPages: number }) => {
         {parseInt(currentPage!) > 1 && (
           <PaginationItem>
             <PaginationPrevious
-              href={currentPage ? `/?page=${parseInt(currentPage) - 1}` : "/"}
+              href={
+                currentPage ? `/?page=${parseInt(currentPage) - 1}` : "/?page=1"
+              }
             />
           </PaginationItem>
         )}
         <PaginationItem>
-          <PaginationLink href="#">{currentPage}</PaginationLink>
+          <PaginationLink href="#">
+            {currentPage ? currentPage : "1"}
+          </PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem>
-        {parseInt(currentPage!) < totalPages && (
+        {currentPage && parseInt(currentPage!) < totalPages ? (
           <PaginationItem>
             <PaginationNext
               href={currentPage ? `/?page=${parseInt(currentPage) + 1}` : "/"}
             />
           </PaginationItem>
+        ) : (
+          !currentPage && (
+            <PaginationItem>
+              <PaginationNext
+                href={
+                  currentPage
+                    ? `/?page=${parseInt(currentPage) + 1}`
+                    : "/?page=2"
+                }
+              />
+            </PaginationItem>
+          )
         )}
       </PaginationContent>
     </Pagination>
