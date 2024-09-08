@@ -100,7 +100,13 @@ const PostsList = () => {
                 isLikedByUser={allPosts.isLikedByUser.has(post.id)}
               />
             ))}
-          {type == "liked" && !allLikedPosts ? (
+          {type == "liked" && !userId ? (
+            <div className="flex h-64 w-[90vw] items-center justify-center">
+              <p className="text-zinc-500">
+                You need to be logged in to see your liked posts
+              </p>
+            </div>
+          ) : userId && !allLikedPosts ? (
             <div className="flex h-64 w-[90vw] items-center justify-center">
               <Loader2 className="animate-spin" />
             </div>
