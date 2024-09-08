@@ -7,11 +7,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
-const PostPagination = ({ totalPages }: { totalPages: number }) => {
+const PostPagination = ({ totalPages }: { totalPages: number | undefined }) => {
   const currentPage = useSearchParams().get("page");
 
   return (
@@ -34,7 +33,7 @@ const PostPagination = ({ totalPages }: { totalPages: number }) => {
         <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem>
-        {currentPage && parseInt(currentPage!) < totalPages ? (
+        {currentPage && parseInt(currentPage!) < totalPages! ? (
           <PaginationItem>
             <PaginationNext
               href={currentPage ? `/?page=${parseInt(currentPage) + 1}` : "/"}

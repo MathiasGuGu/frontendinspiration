@@ -1,17 +1,24 @@
 "use client";
 import { PostsService } from "@/app/_services/PostsService";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { FilterX, Loader2 } from "lucide-react";
 import Post from "./Post";
 import { CategoryService } from "@/app/_services/CategoryService";
 import { useFilterStore } from "@/stores/filterStore";
 import PostPagination from "../Pagination/PostPagination";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
 const PostsList = () => {
+  const { userId } = useAuth();
   const { allPosts, isAllPostsLoading } = PostsService();
+  const { getAllLikedPosts, allLikedPosts } = PostsService();
   const { getAllCategories } = CategoryService();
   const setFilter = useFilterStore((state) => state.setFilter);
   const filter = useFilterStore((state) => state.filter);
+  const setType = useFilterStore((state) => state.setType);
+  const type = useFilterStore((state) => state.type);
+
   return (
     <div className="mt-24 flex h-auto w-full flex-col items-center justify-center">
       <div className="relative flex w-full max-w-[90%] flex-col">
@@ -48,8 +55,33 @@ const PostsList = () => {
             </Button>
           </div>
           {/* <CreatePostDrawer /> */}
+          <div className="mb-2 mt-6 border-b">
+            <Button
+              onClick={() => setType("all")}
+              variant={"ghost"}
+              className={cn({
+                "border border-b-0 bg-zinc-50": type === "all",
+                "rounded-none": true,
+              })}
+            >
+              All posts
+            </Button>
+            <Button
+              onClick={() => {
+                getAllLikedPosts(userId!);
+                setType("liked");
+              }}
+              variant={"ghost"}
+              className={cn({
+                "border border-b-0 bg-zinc-50": type === "liked",
+                "rounded-none": true,
+              })}
+            >
+              Liked posts
+            </Button>
+          </div>
         </section>
-        <section className="mt-12 grid h-auto grid-cols-1 gap-8 md:grid-cols-3">
+        <section className="mt-12 grid h-auto grid-cols-1 gap-8 gap-y-16 md:grid-cols-3">
           {isAllPostsLoading && (
             <div className="flex h-64 w-[90vw] items-center justify-center">
               <Loader2 className="animate-spin" />
@@ -60,11 +92,31 @@ const PostsList = () => {
               Something went wrong, tying again...
             </div>
           )}
-          {allPosts?.data?.map((post) => <Post key={post.id} post={post} />)}
+          {type == "all" &&
+            allPosts?.data?.map((post) => (
+              <Post
+                key={post.id}
+                post={post}
+                isLikedByUser={allPosts.isLikedByUser.has(post.id)}
+              />
+            ))}
+          {type == "liked" && !allLikedPosts ? (
+            <div className="flex h-64 w-[90vw] items-center justify-center">
+              <Loader2 className="animate-spin" />
+            </div>
+          ) : (
+            allLikedPosts?.data?.map((post) => (
+              <Post key={post.id} post={post.post} isLikedByUser={true} />
+            ))
+          )}
         </section>
-        <PostPagination
-          totalPages={allPosts?.totalPages ? allPosts.totalPages : 0}
-        />
+        <div className="mt-16">
+          <PostPagination
+            totalPages={
+              type == "all" ? allPosts?.totalPages : allLikedPosts?.totalPages
+            }
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { desc, sql } from "drizzle-orm";
+import { desc, relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -19,7 +19,7 @@ export const posts = createTable(
     title: varchar("name", { length: 256 }),
     description: varchar("description", { length: 1024 }),
     link: varchar("link", { length: 256 }),
-    categoryId: integer("category_id").references(() => categories.id),
+    categoryId: integer("category_id"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -31,6 +31,13 @@ export const posts = createTable(
     nameIndex: index("title_idx").on(example.title),
   }),
 );
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  category: one(categories, {
+    fields: [posts.categoryId],
+    references: [categories.id],
+  }),
+}));
 
 export const categories = createTable("category", {
   id: serial("id").primaryKey(),
@@ -45,9 +52,16 @@ export const categories = createTable("category", {
 
 export const likedPost = createTable("liked", {
   id: serial("id").primaryKey(),
-  post: integer("post").references(() => posts.id),
+  post: integer("post"),
   user: varchar("user").references(() => users.clerkId),
 });
+
+export const likedPostRelations = relations(likedPost, ({ one }) => ({
+  post: one(posts, {
+    fields: [likedPost.post],
+    references: [posts.id],
+  }),
+}));
 
 export const users = createTable("user", {
   id: serial("id").primaryKey(),

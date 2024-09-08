@@ -3,7 +3,8 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 import { likedPost } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure
@@ -31,10 +32,11 @@ export const postRouter = createTRPCRouter({
       z.object({
         categoryId: z.number().optional(),
         page: z.number().optional(),
+        userId: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const LIMIT = 6;
+      const LIMIT = 12;
 
       const totalPosts = await ctx.db.query.posts.findMany({});
       const totalPages = Math.ceil(totalPosts.length / LIMIT);
@@ -45,13 +47,22 @@ export const postRouter = createTRPCRouter({
             ? eq(post.categoryId, input.categoryId!)
             : isNotNull(post.id);
         },
-
         limit: LIMIT,
         offset: input.page ? (input.page - 1) * LIMIT : 0,
       });
+
+      const likedPosts = input.userId
+        ? await ctx.db.query.likedPost.findMany({
+            where: (likedPost, { eq }) => eq(likedPost.user!, input.userId!),
+          })
+        : [];
+
+      const likedPostIds = new Set(likedPosts.map((liked) => liked.post));
+
       return {
         data: post ?? null,
         totalPages,
+        isLikedByUser: likedPostIds,
       };
     }),
 
@@ -63,10 +74,56 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(likedPost).values({
-        post: input.postId,
-        user: input.clerkId,
+      const isPostLiked = await ctx.db.query.likedPost.findFirst({
+        where: (likedPost, { eq }) => eq(likedPost.post, input.postId),
       });
+
+      if (isPostLiked) {
+        return await ctx.db
+          .delete(likedPost)
+          .where(
+            and(
+              eq(likedPost.post, input.postId),
+              eq(likedPost.user, input.clerkId),
+            ),
+          );
+      } else {
+        return await ctx.db.insert(likedPost).values({
+          post: input.postId,
+          user: input.clerkId,
+        });
+      }
+    }),
+
+  getAllLiked: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (!input.userId) return { data: null, totalPages: 0 };
+
+      const LIMIT = 12;
+
+      const totalPosts = await ctx.db.query.likedPost.findMany({
+        where: (likedPost, { eq }) => eq(likedPost.user!, input.userId!),
+      });
+      const totalPages = Math.ceil(totalPosts.length / LIMIT);
+
+      const post = await ctx.db.query.likedPost.findMany({
+        where: (likedPost, { eq }) => eq(likedPost.user!, input.userId!),
+        with: {
+          post: true,
+        },
+        limit: LIMIT,
+        offset: 0,
+      });
+
+      return {
+        data: post ?? null,
+        totalPages,
+      };
     }),
   getById: publicProcedure
     .input(

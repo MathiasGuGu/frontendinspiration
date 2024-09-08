@@ -1,6 +1,7 @@
 "use client";
 import {
   posts_createNewPost,
+  posts_getAllLikedPosts,
   posts_getAllPosts,
   posts_getPostById,
   posts_likePost,
@@ -8,8 +9,10 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFilterStore } from "../../stores/filterStore";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 export const PostsService = () => {
+  const { userId } = useAuth();
   const filter = useFilterStore((state) => state.filter);
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
@@ -20,14 +23,25 @@ export const PostsService = () => {
     isError: isAllPostsError,
     refetch: refetchAllPosts,
   } = useQuery({
-    queryKey: ["posts_getAllPosts", filter, page],
-    queryFn: () => posts_getAllPosts(filter, page ? parseInt(page) : 1),
+    queryKey: ["posts_getAllPosts", filter, page, userId],
+    queryFn: () =>
+      posts_getAllPosts(
+        filter,
+        page ? parseInt(page) : 1,
+        userId ? userId : "",
+      ),
   });
 
   const { mutate: likePost } = useMutation({
     mutationFn: ({ id, clerkId }: { id: number; clerkId: string }) =>
       posts_likePost({ id, clerkId }),
     mutationKey: ["posts_likePost"],
+    onSuccess: () => refetchAllPosts(),
+  });
+
+  const { mutate: getAllLikedPosts, data: allLikedPosts } = useMutation({
+    mutationFn: (userId: string | undefined) => posts_getAllLikedPosts(userId),
+    mutationKey: ["posts_getAllLikedPosts", userId],
   });
 
   const {
@@ -57,8 +71,10 @@ export const PostsService = () => {
 
   return {
     createNewPost,
+    getAllLikedPosts,
     likePost,
     getPostById,
+    allLikedPosts,
     postByIdData,
     isCreateNewPostPending,
     isCreateNewPostError,

@@ -15,8 +15,9 @@ export const posts_createNewPost = async (post: Post) => {
 export const posts_getAllPosts = async (
   categoryId: number | undefined,
   page: number | undefined,
+  userId: string | undefined,
 ) => {
-  return await api.post.getAll({ categoryId, page });
+  return await api.post.getAll({ categoryId, page, userId });
 };
 
 export const posts_likePost = async ({
@@ -27,6 +28,10 @@ export const posts_likePost = async ({
   clerkId: string;
 }) => {
   return await api.post.likePost({ postId: id, clerkId });
+};
+
+export const posts_getAllLikedPosts = async (userId: string | undefined) => {
+  return await api.post.getAllLiked({ userId });
 };
 
 export const posts_getPostById = async (id: number) => {
