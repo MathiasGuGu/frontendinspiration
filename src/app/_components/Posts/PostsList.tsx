@@ -66,19 +66,21 @@ const PostsList = () => {
             >
               All posts
             </Button>
-            <Button
-              onClick={() => {
-                getAllLikedPosts(userId!);
-                setType("liked");
-              }}
-              variant={"ghost"}
-              className={cn({
-                "border border-b-0 bg-zinc-50": type === "liked",
-                "rounded-none": true,
-              })}
-            >
-              Liked posts
-            </Button>
+            {userId && (
+              <Button
+                onClick={() => {
+                  getAllLikedPosts(userId!);
+                  setType("liked");
+                }}
+                variant={"ghost"}
+                className={cn({
+                  "border border-b-0 bg-zinc-50": type === "liked",
+                  "rounded-none": true,
+                })}
+              >
+                Liked posts
+              </Button>
+            )}
           </div>
         </section>
         <section className="mt-12 grid h-auto grid-cols-1 gap-8 gap-y-16 md:grid-cols-3">
