@@ -3,7 +3,6 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 import { likedPost } from "@/server/db/schema";
-import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({

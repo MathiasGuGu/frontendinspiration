@@ -1,16 +1,10 @@
-import { user_createUser } from "@/app/_server/UserActions";
-import { api } from "@/trpc/server";
-import { WebhookEvent, UserWebhookEvent } from "@clerk/nextjs/server";
+import { type UserWebhookEvent } from "@clerk/nextjs/server";
 
 export async function POST(request: Request) {
   const payload: UserWebhookEvent = await request.json();
 
   switch (payload.type) {
     case "user.created":
-      user_createUser({
-        username: payload.data.username ?? "user",
-        clerkId: payload.data.id,
-      });
       return Response.json({ message: "Hello User!" });
 
     case "user.deleted":
