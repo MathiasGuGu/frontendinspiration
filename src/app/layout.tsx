@@ -5,9 +5,6 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import Navbar from "./_components/Navbar/Navbar";
-import QueryProvider from "@/provider/QueryProvider";
-import Footer from "./_components/Footer/Footer";
-import ClerkProvider from "../provider/ClerkProvider";
 import Clerk from "../provider/ClerkProvider";
 
 export const metadata: Metadata = {
@@ -33,13 +30,10 @@ export default function RootLayout({
     >
       <body>
         <Clerk>
-          <QueryProvider>
-            <TRPCReactProvider>
-              <Navbar />
-              {children}
-              <Footer />
-            </TRPCReactProvider>
-          </QueryProvider>
+          <TRPCReactProvider>
+            <Navbar />
+            {children}
+          </TRPCReactProvider>
         </Clerk>
       </body>
     </html>

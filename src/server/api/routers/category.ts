@@ -16,8 +16,9 @@ export const categoryRouter = createTRPCRouter({
       });
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.query.categories.findMany();
+  get: publicProcedure.query(async ({ ctx }) => {
+    const post = await ctx.db.query.categories.findMany({});
+
     return post ?? null;
   }),
 });
