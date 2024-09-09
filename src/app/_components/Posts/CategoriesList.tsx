@@ -32,6 +32,7 @@ const CategoriesList = () => {
       <div className="flex flex-wrap items-center gap-2 pt-12">
         {data.map((category) => (
           <Button
+            key={category.id}
             variant={"outline"}
             onClick={() => {
               pushFilter(category.id);
