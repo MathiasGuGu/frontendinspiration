@@ -1,32 +1,30 @@
+import { category_getAllCategories } from "@/app/_server/CategoryActions";
 import { CategoryService } from "@/app/_services/CategoryService";
 import { PostsService } from "@/app/_services/PostsService";
 import { Button } from "@/components/ui/button";
+import { PostType, type PostsWithCategories } from "@/server/db/schema";
 import { useAuth } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, Heart, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import PostCategory from "./PostCategory";
 
 const Post = ({
   post,
   isLikedByUser = false,
 }: {
-  post: any;
+  post: PostType;
   isLikedByUser?: boolean;
 }) => {
   const [isLiked, setIsLiked] = useState(isLikedByUser);
   const { userId } = useAuth();
-  const { getAllCategories } = CategoryService();
   const { likePost } = PostsService();
+
   return (
     <div key={post.id} className="group relative rounded-lg">
-      <div className="absolute -top-3 left-2 z-20 rounded-lg border border-zinc-400 bg-white px-3 py-1 text-xs font-medium text-zinc-600">
-        {!getAllCategories && "Loading..."}
-        {
-          getAllCategories?.find((category) => category.id === post.categoryId)
-            ?.name
-        }
-      </div>
+      <PostCategory categoryId={post.categoryId ? post.categoryId : 0} />
       <div className="relative mb-2 aspect-square w-full rounded-lg border-purple-300 bg-purple-50 group-hover:border">
         <Image
           src={post.imageUrl!}

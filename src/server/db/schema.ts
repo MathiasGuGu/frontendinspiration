@@ -1,4 +1,11 @@
-import { desc, relations, sql } from "drizzle-orm";
+import {
+  BuildQueryResult,
+  DBQueryConfig,
+  desc,
+  ExtractTablesWithRelations,
+  relations,
+  sql,
+} from "drizzle-orm";
 import {
   index,
   integer,
@@ -7,8 +14,29 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-
+import * as schema from "@/server/db/schema";
 export const createTable = pgTableCreator((name) => `${name}`);
+
+type Schema = typeof schema;
+type TSchema = ExtractTablesWithRelations<Schema>;
+
+export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<
+  "one" | "many",
+  boolean,
+  TSchema,
+  TSchema[TableName]
+>["with"];
+
+export type InferResultType<
+  TableName extends keyof TSchema,
+  With extends IncludeRelation<TableName> | undefined = undefined,
+> = BuildQueryResult<
+  TSchema,
+  TSchema[TableName],
+  {
+    with: With;
+  }
+>;
 
 export const posts = createTable(
   "post",
@@ -32,6 +60,15 @@ export const posts = createTable(
   }),
 );
 
+export type PostsWithCategories = InferResultType<
+  "posts",
+  {
+    category: true;
+  }
+>;
+
+export type PostType = InferResultType<"posts">;
+
 export const postsRelations = relations(posts, ({ one }) => ({
   category: one(categories, {
     fields: [posts.categoryId],
@@ -50,11 +87,18 @@ export const categories = createTable("category", {
   ),
 });
 
+export type CategoriesType = InferResultType<"categories">;
+
 export const likedPost = createTable("liked", {
   id: serial("id").primaryKey(),
   post: integer("post"),
   user: varchar("user").references(() => users.clerkId),
 });
+
+export type LikedPostWithPostAndUser = InferResultType<
+  "likedPost",
+  { post: true; user: true }
+>;
 
 export const likedPostRelations = relations(likedPost, ({ one }) => ({
   post: one(posts, {
