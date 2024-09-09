@@ -36,7 +36,7 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const LIMIT = 12;
+      const LIMIT = 24;
 
       const totalPosts = await ctx.db.query.posts.findMany({});
       const totalPages = Math.ceil(totalPosts.length / LIMIT);
@@ -104,7 +104,7 @@ export const postRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       if (!input.userId) return { data: null, totalPages: 0 };
 
-      const LIMIT = 12;
+      const LIMIT = 24;
 
       const totalPosts = await ctx.db.query.likedPost.findMany({
         where: (likedPost, { eq }) => eq(likedPost.user!, input.userId!),

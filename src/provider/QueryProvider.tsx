@@ -7,27 +7,25 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import React from "react";
-
-const queryClient = new QueryClient();
+import React, { useState } from "react";
 
 const QueryProvider = ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
-  queryClient.prefetchQuery({
-    queryKey: ["allPosts"],
-    queryFn: () => posts_getAllPosts(undefined, undefined, undefined),
-  });
-  queryClient.prefetchQuery({
-    queryKey: ["allCategories"],
-    queryFn: () => category_getAllCategories(),
-  });
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 6 * 1000,
+            refetchInterval: 6 * 1000,
+          },
+        },
+      }),
+  );
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        {children}
-      </HydrationBoundary>
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
 

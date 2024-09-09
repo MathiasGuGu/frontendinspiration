@@ -8,20 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, Heart, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
 import PostCategory from "./PostCategory";
+import PostSaveButton from "./PostSaveButton";
 
-const Post = ({
-  post,
-  isLikedByUser = false,
-}: {
-  post: PostType;
-  isLikedByUser?: boolean;
-}) => {
-  const [isLiked, setIsLiked] = useState(isLikedByUser);
-  const { userId } = useAuth();
-  const { likePost } = PostsService();
-
+const Post = ({ post }: { post: PostType; isLikedByUser?: boolean }) => {
   return (
     <div key={post.id} className="group relative rounded-lg">
       <PostCategory categoryId={post.categoryId ? post.categoryId : 0} />
@@ -47,21 +37,7 @@ const Post = ({
               Go to website
             </Button>
           </Link>
-          <Button
-            onClick={() => {
-              setIsLiked(!isLiked);
-              likePost({ id: post.id, clerkId: userId! });
-            }}
-            variant={"ghost"}
-            className="m-0 size-10 p-0"
-          >
-            <Heart
-              size={20}
-              strokeWidth={1.5}
-              fill={isLiked ? "red" : "transparent"}
-              stroke={isLiked ? "red" : "#000"}
-            />
-          </Button>
+          <PostSaveButton />
         </div>
       </div>
     </div>
