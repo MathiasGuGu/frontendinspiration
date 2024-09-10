@@ -1,8 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { type PostType } from "@/server/db/schema";
 import Image from "next/image";
+import PostLink from "./PostLink";
+import PostSave from "./PostSave";
 
-const Post = ({ post }: { post: PostType }) => {
+const Post = async ({
+  post,
+  isSaved,
+}: {
+  post: PostType;
+  isSaved: boolean | undefined;
+}) => {
   return (
     <div className="h-[400px] w-full">
       <Image
@@ -11,7 +18,7 @@ const Post = ({ post }: { post: PostType }) => {
         height={899}
         width={924}
         priority
-        className="h-2/3 rounded border border-zinc-100 bg-zinc-50 object-contain"
+        className="h-2/3 rounded border border-zinc-200 bg-zinc-100 object-contain"
       />
       <div className="flex flex-col gap-2 px-2 pt-4">
         <div className="relative -space-y-1">
@@ -20,13 +27,8 @@ const Post = ({ post }: { post: PostType }) => {
         </div>
 
         <div className="mt-2 flex h-10 items-center justify-start gap-2">
-          <Button
-            variant={"outline"}
-            size={"sm"}
-            className="bg-transparent px-2 text-sm font-normal text-zinc-600"
-          >
-            Go to website
-          </Button>
+          <PostLink />
+          <PostSave isSaved={isSaved} postId={post.id} />
         </div>
       </div>
     </div>

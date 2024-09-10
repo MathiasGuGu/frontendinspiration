@@ -1,8 +1,7 @@
 import {
-  BuildQueryResult,
-  DBQueryConfig,
-  desc,
-  ExtractTablesWithRelations,
+  type BuildQueryResult,
+  type DBQueryConfig,
+  type ExtractTablesWithRelations,
   relations,
   sql,
 } from "drizzle-orm";
@@ -14,7 +13,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import * as schema from "@/server/db/schema";
+import type * as schema from "@/server/db/schema";
 export const createTable = pgTableCreator((name) => `${name}`);
 
 type Schema = typeof schema;

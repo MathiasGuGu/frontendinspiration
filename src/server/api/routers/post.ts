@@ -4,6 +4,7 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 import { likedPost } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs/server";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure
