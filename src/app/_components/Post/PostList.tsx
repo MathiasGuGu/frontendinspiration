@@ -11,6 +11,7 @@ const PostList = async ({
   const { userId } = await auth();
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   let allLikedPosts: any = undefined;
+
   if (userId) {
     allLikedPosts = await api.post.getAllLiked({
       userId: userId!,
